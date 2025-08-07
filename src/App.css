@@ -1,0 +1,7 @@
+/* App.css limpio */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background-color: white;
+  overflow: hidden; /* solo si no quieres scroll */
+}
