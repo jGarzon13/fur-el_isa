@@ -34,6 +34,7 @@ const Playlist = () => {
       </header>
 
       <main className="min-h-screen flex bg-white text-red-900 overflow-hidden relative">
+        {/* Fondo animado difuso */}
         <motion.div
           key={current}
           initial={{ opacity: 0, scale: 1.05 }}
@@ -45,6 +46,7 @@ const Playlist = () => {
           <div className="w-full h-full bg-red-700 blur-xl opacity-50" />
         </motion.div>
 
+        {/* Panel izquierdo */}
         <div className="w-[45%] min-h-screen bg-red-700 text-white flex flex-col justify-center items-center px-8 pt-24 pb-10 relative z-10">
           <div className="text-center mb-4">
             <h2 className="text-5xl italic font-serif text-white leading-tight mb-2 text-center">
@@ -142,6 +144,7 @@ const Playlist = () => {
           </AnimatePresence>
         </div>
 
+        {/* Panel derecho: título en cursiva + mensaje normal con capitular sutil */}
         <div className="w-[55%] p-12 flex flex-col justify-center z-10 bg-white" id="playlist">
           <AnimatePresence mode="wait">
             <motion.div
@@ -151,8 +154,15 @@ const Playlist = () => {
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.4 }}
             >
-              <h2 className="text-lg font-semibold text-red-700 mb-2">Mensaje</h2>
-              <p className="text-base italic text-red-500 whitespace-pre-line">
+              {/* Título en cursiva, discreto */}
+              <h2 className="text-lg italic font-medium text-red-700/80 tracking-tight mb-2">
+                {song.messageTitle || "Título pendiente..."}
+              </h2>
+
+              {/* Mensaje normal (sin cursiva) + primera letra marcada */}
+              <p className="text-[17px] text-red-700/90 leading-relaxed whitespace-pre-line
+                             first-letter:text-3xl first-letter:font-extrabold first-letter:text-pink-600
+                             first-letter:mr-1 first-letter:leading-none">
                 {song.message || "Mensaje pendiente..."}
               </p>
             </motion.div>
