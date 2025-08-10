@@ -2,6 +2,8 @@ import { useState } from "react";
 import { songs } from "../data/songs";
 import CustomAudioPlayer from "../components/CustomAudioPlayer";
 import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "react-router-dom";
+
 
 const Playlist = () => {
   const [current, setCurrent] = useState(0);
@@ -167,6 +169,36 @@ const Playlist = () => {
               </p>
             </motion.div>
           </AnimatePresence>
+
+{/* Botón final solo en la canción 21 */}
+<AnimatePresence mode="wait">
+  {current === songs.length - 1 && (
+    <motion.div
+      key={`${song.id}-cta`}
+      initial={{ opacity: 0, y: 10, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 10, scale: 0.98 }}
+      transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
+      className="mt-8"
+    >
+      <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+        <Link
+  to="/final"
+  className="inline-block px-6 py-3 bg-red-600 hover:bg-red-700 
+             text-white hover:text-white visited:text-white active:text-white focus:text-white 
+             rounded-lg shadow-md transition
+             focus:outline-none focus:ring-2 focus:ring-pink-300/60 focus:ring-offset-2 focus:ring-offset-white
+             no-underline hover:no-underline"
+>
+  Colorín colorado...
+</Link>
+
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
+
         </div>
       </main>
 

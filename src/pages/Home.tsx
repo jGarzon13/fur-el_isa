@@ -1,21 +1,57 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const floatingParticles = Array.from({ length: 20 }, (_, i) => i);
 
 const Home = () => {
   const [started, setStarted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const handleStart = () => {
-    const audio = new Audio("audio/00-fur-elise.mp3");
+  // Crear y precargar el audio al montar
+  useEffect(() => {
+    const audio = new Audio("/audio/00-fur-elise.mp3");
+    audio.preload = "auto";
     audio.loop = true;
-    audio.play();
+    audio.volume = 0; // para hacer fade-in
+    audioRef.current = audio;
+    audio.load();
+
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+      audioRef.current = null;
+    };
+  }, []);
+
+  const handleStart = async () => {
+    if (!audioRef.current) return;
+    try {
+      await audioRef.current.play();
+      // Fade-in suave
+      const target = 1;
+      const step = 0.1;
+      const interval = setInterval(() => {
+        if (!audioRef.current) return clearInterval(interval);
+        const v = Math.min(target, (audioRef.current.volume || 0) + step);
+        audioRef.current.volume = v;
+        if (v >= target) clearInterval(interval);
+      }, 30);
+    } catch {
+      // Ignorar errores de autoplay
+    }
     setStarted(true);
+  };
+
+  const stopAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
   };
 
   return (
     <div className="relative h-screen w-screen flex items-center justify-center bg-gradient-to-br from-pink-200 to-purple-200 text-red-900 font-serif overflow-hidden">
-
       {/* Partículas flotantes */}
       {floatingParticles.map((i) => (
         <div
@@ -49,7 +85,9 @@ const Home = () => {
             </h1>
             <button
               onClick={handleStart}
-              className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-8 py-3 rounded-full transition-all shadow-md"
+              className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-8 py-3 rounded-full 
+                         transition-all shadow-md
+                         focus:outline-none focus:ring-2 focus:ring-pink-300/60 focus:ring-offset-2 focus:ring-offset-pink-100"
             >
               Toca Aquí :)
             </button>
@@ -79,12 +117,16 @@ const Home = () => {
               ¡Feliz cumpleaños, Flaca! 🎂🎉
             </p>
 
-            <a
-              href="/playlist"
-              className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-8 py-3 rounded-full transition-all shadow-md"
-            >
-              Ir a la Playlist
-            </a>
+            <Link
+  to="/playlist"
+  onClick={stopAudio}
+  className="bg-pink-600 hover:bg-pink-700 text-white hover:text-white visited:text-white active:text-white focus:text-white 
+             font-semibold px-8 py-3 rounded-full transition-all shadow-md
+             focus:outline-none focus:ring-2 focus:ring-pink-300/60 focus:ring-offset-2 focus:ring-offset-pink-100
+             no-underline hover:no-underline"
+>
+  Ir a la Playlist
+</Link>
           </motion.div>
         )}
       </AnimatePresence>

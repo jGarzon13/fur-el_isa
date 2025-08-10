@@ -65,7 +65,7 @@ export const songs = [
     artist: "Arctic Monkeys",
     coverUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e7/%22AM%22_%28Arctic_Monkeys%29.jpg",
     hoverImgUrl: "img/07.jpg",
-     messageTitle: "Que piquete la chamaquita",
+     messageTitle: "She's a certified mind blower",
     spotifyUrl: "/audio/07-no1-party-anthem.mp3",
     message: "Rodeado de ruido y luces, me pasa que te miro y esta canción empieza a sonar en mi cabeza. Veo un momento en el que te encuentro en medio del caos y todo lo demás se vuelve borroso. Me quedo ahí, perdiéndome un segundo en tu figura, como si el mundo se pusiera en pausa para que solo estemos nosotros. Es un poco melancólica, sí, pero también una pequeña victoria: en ocasiones, me quedo en lo que irradias.",
   },
@@ -117,7 +117,7 @@ export const songs = [
     hoverImgUrl: "img/12.jpg",
      messageTitle: "That little lady sittin' on the passenger side",
     spotifyUrl: "/audio/12-arabella.mp3",
-    message: "Noté que esta canción me recuerda a ti en la Uni-K: mis días terminan mejor cuando el atardecer se acomoda detrás y vas en el asiento de al pasajero viéndote por el retrovisor. No hace falta carro; basta verte capturar la luz para que todo se vea más bonito. No es igual cuando no estás: el horizonte lo intenta, pero a mis ojos les sienta mejor contigo ahí, cerrando el día juntos. (Motomami pic on the hover)",
+    message: "Noté que esta canción me recuerda a ti en la Uni-K: mis días terminan mejor cuando el atardecer se acomoda detrás y vas en el asiento del pasajero viéndote por el retrovisor. No hace falta carro; basta verte capturar la luz para que todo se vea más bonito. No es igual cuando no estás: el horizonte lo intenta, pero a mis ojos les sienta mejor contigo ahí, cerrando el día juntos. (Motomami pic on the hover)",
   },
   {
     id: 13,
