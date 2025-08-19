@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { songs } from "../data/songs";
 
 const floatingParticles = Array.from({ length: 20 }, (_, i) => i);
 
@@ -29,6 +30,8 @@ export default function Album() {
     [images.length]
   );
 
+  const currentSong = openIndex !== null ? songs.find((s) => s.id === openIndex + 1) : null;
+
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (openIndex === null) return;
@@ -36,7 +39,6 @@ export default function Album() {
       if (e.key === "ArrowRight") { e.preventDefault(); next(); }
       if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
       if (e.key === "PageDown" || e.key === "PageUp" || e.key === "Home" || e.key === "End" || e.key === " ") {
-        // Evitar que el navegador haga scroll en el fondo mientras el modal está abierto
         e.preventDefault();
       }
     }
@@ -52,7 +54,6 @@ export default function Album() {
     n2.src = images[(openIndex - 1 + images.length) % images.length];
   }, [openIndex, images]);
 
-  // Bloquear scroll del body cuando el lightbox está abierto
   useEffect(() => {
     const original = document.body.style.overflow;
     if (openIndex !== null) {
@@ -62,6 +63,26 @@ export default function Album() {
     }
     return () => { document.body.style.overflow = original || ''; };
   }, [openIndex]);
+
+  // Swipe gestures
+  useEffect(() => {
+    if (openIndex === null) return;
+    let startX = 0;
+    function handleTouchStart(e: TouchEvent) {
+      startX = e.touches[0].clientX;
+    }
+    function handleTouchEnd(e: TouchEvent) {
+      const endX = e.changedTouches[0].clientX;
+      if (startX - endX > 50) next();
+      if (endX - startX > 50) prev();
+    }
+    window.addEventListener("touchstart", handleTouchStart);
+    window.addEventListener("touchend", handleTouchEnd);
+    return () => {
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [openIndex, next, prev]);
 
   return (
     <div className="relative min-h-screen w-screen flex flex-col items-center bg-gradient-to-br from-pink-200 to-purple-200 text-red-900 font-serif overflow-hidden">
@@ -76,16 +97,23 @@ export default function Album() {
         </div>
       ))}
 
-      <div className="z-10 w-full max-w-6xl px-4 sm:px-6 md:px-8 pt-8 pb-20">
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <Link
-            to="/playlist"
-            className="inline-block px-5 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-full shadow-md transition focus:outline-none focus:ring-2 focus:ring-pink-300/60 focus:ring-offset-2 focus:ring-offset-pink-100 no-underline"
-          >
-            ⬅ Volver
-          </Link>
-        </motion.div>
+      {/* Header más compacto */}
+      <header className="fixed top-0 left-0 w-full h-14 md:h-16 flex items-center justify-between px-4 sm:px-6 md:px-10 bg-white/90 backdrop-blur-sm border-b border-red-100 shadow-sm z-20">
+        <h1 className="text-lg sm:text-xl font-serif italic text-red-800 flex items-center gap-1">
+          <strong className="font-extrabold">Fur el</strong>
+          <span className="relative text-red-600 font-semibold">
+            (Isa)
+            <span className="absolute -top-2 -right-5 text-xs md:text-sm animate-pulse">❤️</span>
+          </span>
+        </h1>
+        <nav className="hidden sm:flex gap-4 md:gap-6 text-xs sm:text-sm font-medium">
+          <Link to="/" className="text-red-800 hover:text-red-500 transition">Inicio</Link>
+          <Link to="/playlist" className="text-red-800 hover:text-red-500 transition">Playlist</Link>
+          <Link to="/album" className="text-red-800 hover:text-red-500 transition">Album</Link>
+        </nav>
+      </header>
 
+      <div className="z-10 w-full max-w-6xl px-4 sm:px-6 md:px-8 pt-20 pb-20">
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -97,7 +125,7 @@ export default function Album() {
             <span className="inline-block ml-1 text-xl align-top">📷</span>
           </h1>
           <p className="text-center mt-3 text-red-800 italic">
-            21 fotos — recuerda tocar o hacer click para ver en grande; usa ← → para navegar.
+            21 fotos — recuerda tocar o hacer click para ver en grande; usa ← → o swipe para navegar.
           </p>
         </motion.div>
 
@@ -145,21 +173,36 @@ export default function Album() {
             >
               <img
                 src={images[openIndex]}
-                alt={`Foto ${openIndex + 1}`}
+                alt={`Foto ${openIndex + 1} — ${currentSong?.title ?? ""}`}
                 className="max-h-[85vh] w-auto rounded-xl shadow-xl"
               />
 
-              {/* Controles compactos */}
+              {/* Caption con título y subtítulo */}
+              {currentSong && (
+                <div className="absolute left-1/2 -translate-x-1/2 bottom-4 max-w-[90%]">
+                  <div className="inline-block px-3 py-2 rounded-lg bg-black/60 text-white text-center shadow">
+                    <div className="text-sm sm:text-base font-semibold leading-tight">
+                      {currentSong.title}
+                    </div>
+                    {currentSong.messageTitle && (
+                      <div className="text-xs sm:text-sm italic text-white/90 leading-tight">
+                        {currentSong.messageTitle}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <div className="absolute inset-0 flex items-center justify-between px-2 sm:px-6 pointer-events-none">
                 <button
-                  onClick={(e) => { e.stopPropagation(); prev(); }}
+                  onClick={prev}
                   aria-label="Anterior"
                   className="pointer-events-auto p-1.5 sm:p-2 rounded-full bg-white/80 hover:bg-white shadow text-lg"
                 >
                   ←
                 </button>
                 <button
-                  onClick={(e) => { e.stopPropagation(); next(); }}
+                  onClick={next}
                   aria-label="Siguiente"
                   className="pointer-events-auto p-1.5 sm:p-2 rounded-full bg-white/80 hover:bg-white shadow text-lg"
                 >
