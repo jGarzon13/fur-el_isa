@@ -5,6 +5,7 @@ import Home from './pages/Home.tsx';
 import Playlist from './pages/Playlist.tsx';
 import './index.css';
 import Final from "./pages/Final";
+import Album from "./pages/Album.tsx";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -14,6 +15,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <Route path="/playlist" element={<Playlist />} />
   <Route path="/final" element={<Final />} />
   <Route path="*" element={<Home />} />   {/* fallback */}
+  <Route path="/album" element={<Album />} />
+
 </Routes>
 
     </BrowserRouter>

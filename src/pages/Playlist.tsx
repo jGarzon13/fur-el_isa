@@ -4,7 +4,6 @@ import CustomAudioPlayer from "../components/CustomAudioPlayer";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
-
 const Playlist = () => {
   const [current, setCurrent] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -21,40 +20,43 @@ const Playlist = () => {
 
   return (
     <div className="w-screen min-h-screen flex flex-col bg-white text-red-900 overflow-x-hidden">
-      <header className="fixed top-0 left-0 w-full flex justify-between items-center px-10 py-4 bg-white/90 backdrop-blur-sm border-b border-red-100 shadow-sm z-20">
-        <h1 className="text-2xl font-serif italic text-red-800">
+      {/* Header: altura fija para alinear el contenido */}
+      <header className="fixed top-0 left-0 w-full h-16 md:h-24 flex items-center justify-between px-4 sm:px-6 md:px-10 bg-white/90 backdrop-blur-sm border-b border-red-100 shadow-sm z-20">
+        <h1 className="text-xl sm:text-2xl font-serif italic text-red-800 flex items-center gap-1">
           <strong className="font-extrabold">Fur el</strong>
           <span className="relative text-red-600 font-semibold">
             (Isa)
-            <span className="absolute -top-2 -right-5 text-sm animate-pulse">❤️</span>
+            <span className="absolute -top-2 -right-5 text-xs md:text-sm animate-pulse">❤️</span>
           </span>
         </h1>
-        <nav className="space-x-6 text-sm font-medium">
+        <nav className="hidden sm:flex gap-4 md:gap-6 text-xs sm:text-sm font-medium">
           <a href="/" className="text-red-800 hover:text-red-500 transition">Inicio</a>
-          <a href="#playlist" className="text-red-800 hover:text-red-500 transition">Playlist</a>
+          <a href="/playlist" className="text-red-800 hover:text-red-500 transition">Playlist</a>
+          <a href="/album" className="text-red-800 hover:text-red-500 transition">Album</a>
         </nav>
       </header>
 
-      <main className="min-h-screen flex bg-white text-red-900 overflow-hidden relative">
-        {/* Fondo animado difuso */}
+      {/* Main: padding-top igual a la altura del header para evitar espacio/solape */}
+      <main className="min-h-screen pt-16 md:pt-24 flex flex-col md:flex-row bg-white text-red-900 overflow-hidden relative">
+        {/* Fondo animado difuso (ajustado a la altura del header) */}
         <motion.div
           key={current}
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.05 }}
           transition={{ duration: 0.5 }}
-          className="absolute left-0 top-[96px] w-[45%] h-[calc(100%-96px)] z-0 overflow-hidden pointer-events-none"
+          className="hidden md:block absolute left-0 top-24 w-[45%] h-[calc(100%-6rem)] z-0 overflow-hidden pointer-events-none"
         >
           <div className="w-full h-full bg-red-700 blur-xl opacity-50" />
         </motion.div>
 
         {/* Panel izquierdo */}
-        <div className="w-[45%] min-h-screen bg-red-700 text-white flex flex-col justify-center items-center px-8 pt-24 pb-10 relative z-10">
-          <div className="text-center mb-4">
-            <h2 className="text-5xl italic font-serif text-white leading-tight mb-2 text-center">
+        <section className="relative z-10 w-full md:w-[45%] bg-red-700 text-white flex flex-col items-center md:justify-center px-4 sm:px-6 md:px-8 pt-4 md:pt-6 pb-8">
+          <div className="text-center mb-4 md:mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl italic font-serif text-white leading-tight mb-2">
               <strong className="font-extrabold">21</strong> songs for your <strong className="font-extrabold">21</strong>
             </h2>
-            <p className="text-sm italic text-white/70 text-center max-w-md mx-auto mb-4">
+            <p className="text-xs sm:text-sm italic text-white/80 max-w-md mx-auto mb-3 sm:mb-4">
               Cada canción es un momento, y un momento viene con un recuerdo, pasa el mouse por la imagen ;)
             </p>
             <AnimatePresence mode="wait">
@@ -64,17 +66,18 @@ const Playlist = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 8 }}
                 transition={{ duration: 0.3 }}
-                className="text-4xl font-extrabold text-white"
+                className="text-3xl sm:text-4xl font-extrabold text-white"
               >
                 #{current + 1}
               </motion.h1>
             </AnimatePresence>
           </div>
 
-          <div className="flex items-center justify-center gap-4 mb-6">
+          <div className="flex items-center justify-center gap-3 sm:gap-4 mb-5 md:mb-6">
             <button
               onClick={handlePrev}
-              className="text-2xl p-2 rounded-full bg-red-200 hover:bg-red-300 text-red-700 transition"
+              className="text-xl sm:text-2xl p-2 rounded-full bg-red-200 hover:bg-red-300 text-red-700 transition"
+              aria-label="Anterior"
             >
               ⬅
             </button>
@@ -89,7 +92,7 @@ const Playlist = () => {
                 transition={{ duration: 0.4 }}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                className="relative w-48 aspect-square overflow-hidden rounded-xl shadow-xl"
+                className="relative w-36 sm:w-48 md:w-56 aspect-square overflow-hidden rounded-xl shadow-xl"
               >
                 <motion.img
                   src={song.coverUrl}
@@ -122,7 +125,8 @@ const Playlist = () => {
 
             <button
               onClick={handleNext}
-              className="text-2xl p-2 rounded-full bg-red-200 hover:bg-red-300 text-red-700 transition"
+              className="text-xl sm:text-2xl p-2 rounded-full bg-red-200 hover:bg-red-300 text-red-700 transition"
+              aria-label="Siguiente"
             >
               ➡
             </button>
@@ -137,17 +141,17 @@ const Playlist = () => {
               transition={{ duration: 0.4 }}
               className="text-center w-full max-w-md"
             >
-              <h2 className="text-xl font-semibold">{song.title}</h2>
-              <p className="text-md text-red-200">{song.artist}</p>
+              <h2 className="text-lg sm:text-xl font-semibold">{song.title}</h2>
+              <p className="text-sm sm:text-base text-red-200">{song.artist}</p>
               <div className="mt-2">
                 <CustomAudioPlayer src={song.spotifyUrl} />
               </div>
             </motion.div>
           </AnimatePresence>
-        </div>
+        </section>
 
-        {/* Panel derecho: título en cursiva + mensaje normal con capitular sutil */}
-        <div className="w-[55%] p-12 flex flex-col justify-center z-10 bg-white" id="playlist">
+        {/* Panel derecho */}
+        <section className="w-full md:w-[55%] p-5 sm:p-8 md:p-12 flex flex-col justify-center z-10 bg-white" id="playlist">
           <AnimatePresence mode="wait">
             <motion.div
               key={song.id + "-message"}
@@ -156,53 +160,45 @@ const Playlist = () => {
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.4 }}
             >
-              {/* Título en cursiva, discreto */}
-              <h2 className="text-lg italic font-medium text-red-700/80 tracking-tight mb-2">
+              {/* Título */}
+              <h2 className="text-base sm:text-lg italic font-medium text-red-700/80 tracking-tight mb-2">
                 {song.messageTitle || "Título pendiente..."}
               </h2>
 
-              {/* Mensaje normal (sin cursiva) + primera letra marcada */}
-              <p className="text-[17px] text-red-700/90 leading-relaxed whitespace-pre-line
-                             first-letter:text-3xl first-letter:font-extrabold first-letter:text-pink-600
-                             first-letter:mr-1 first-letter:leading-none">
+              {/* Mensaje */}
+              <p className="text-[16px] sm:text-[17px] text-red-700/90 leading-relaxed whitespace-pre-line first-letter:text-2xl sm:first-letter:text-3xl first-letter:font-extrabold first-letter:text-pink-600 first-letter:mr-1 first-letter:leading-none">
                 {song.message || "Mensaje pendiente..."}
               </p>
             </motion.div>
           </AnimatePresence>
 
-{/* Botón final solo en la canción 21 */}
-<AnimatePresence mode="wait">
-  {current === songs.length - 1 && (
-    <motion.div
-      key={`${song.id}-cta`}
-      initial={{ opacity: 0, y: 10, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 10, scale: 0.98 }}
-      transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
-      className="mt-8"
-    >
-      <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-        <Link
-  to="/final"
-  className="inline-block px-6 py-3 bg-red-600 hover:bg-red-700 
-             text-white hover:text-white visited:text-white active:text-white focus:text-white 
-             rounded-lg shadow-md transition
-             focus:outline-none focus:ring-2 focus:ring-pink-300/60 focus:ring-offset-2 focus:ring-offset-white
-             no-underline hover:no-underline"
->
-  Colorín colorado...
-</Link>
-
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
-
-
-        </div>
+          {/* CTA solo en la última canción */}
+          <AnimatePresence mode="wait">
+            {current === songs.length - 1 && (
+              <motion.div
+                key={`${song.id}-cta`}
+                initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
+                className="mt-6 sm:mt-8"
+              >
+                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    to="/final"
+                    className="inline-block px-5 sm:px-6 py-2.5 sm:py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md transition focus:outline-none focus:ring-2 focus:ring-pink-300/60 focus:ring-offset-2 focus:ring-offset-white no-underline"
+                  >
+                    Colorín colorado...
+                  </Link>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </section>
       </main>
 
-      <footer className="w-full text-center text-xs text-white/60 bg-red-800 py-2 z-20">
+      {/* Footer */}
+      <footer className="w-full text-center text-[10px] sm:text-xs text-white/70 bg-red-800 py-2 z-20">
         Hecho con 💖 para Isa · {new Date().getFullYear()}
       </footer>
     </div>
