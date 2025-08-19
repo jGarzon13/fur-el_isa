@@ -30,10 +30,10 @@ const Playlist = () => {
           </span>
         </h1>
         <nav className="hidden sm:flex gap-4 md:gap-6 text-xs sm:text-sm font-medium">
-          <a href="/" className="text-red-800 hover:text-red-500 transition">Inicio</a>
-          <a href="/playlist" className="text-red-800 hover:text-red-500 transition">Playlist</a>
-          <a href="/album" className="text-red-800 hover:text-red-500 transition">Album</a>
-        </nav>
+<Link to="/" className="text-red-800 hover:text-red-500 transition">Inicio</Link>
+<Link to="/playlist" className="text-red-800 hover:text-red-500 transition">Playlist</Link>
+<Link to="/album" className="text-red-800 hover:text-red-500 transition">Album</Link>
+</nav>
       </header>
 
       {/* Main: padding-top igual a la altura del header para evitar espacio/solape */}
